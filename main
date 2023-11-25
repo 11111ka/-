@@ -1,0 +1,60 @@
+color[] colors = {#CC9999, #CCCC99, #669999, #FFFFFF, #000000}; // 粉色，黄绿色，蓝绿色，白色和黑色
+int lineThickness = 4;
+int canvasWidth=748;
+int canvasHeight=748;
+void setup() {
+  size(748,748);
+  background(colors[3]); // 以白色为背景
+  strokeWeight(lineThickness);
+  noLoop();
+}
+
+void draw() {
+  int margin = 100; // 边距
+  int minSize = 50; // 最小矩形尺寸
+  
+  // 创建随机线条的数组
+  ArrayList<Float> verticalLines = new ArrayList<Float>();
+  ArrayList<Float> horizontalLines = new ArrayList<Float>();
+
+  // 在边距范围内随机添加线条
+  for (int i = margin; i < canvasWidth - margin; i+=minSize) {
+    verticalLines.add(i + random(-minSize/2, minSize/2));
+  }
+  for (int i = margin; i < canvasHeight - margin; i+=minSize) {
+    horizontalLines.add(i + random(-minSize/2, minSize/2));
+  }
+
+  // 绘制垂直线
+  for (Float vLine : verticalLines) {
+    line(vLine, margin, vLine, canvasHeight - margin);
+  }
+
+  // 绘制水平线
+  for (Float hLine : horizontalLines) {
+    line(margin, hLine, canvasWidth - margin, hLine);
+  }
+
+  // 填充颜色块
+  for (int i = 0; i < verticalLines.size() - 1; i++) {
+    for (int j = 0; j < horizontalLines.size() - 1; j++) {
+      float x0 = verticalLines.get(i);
+      float y0 = horizontalLines.get(j);
+      float x1 = verticalLines.get(i + 1);
+      float y1 = horizontalLines.get(j + 1);
+      
+      if (random(1) < 0.25) { // 有25%的概率填充颜色
+        fill(colors[(int) random(colors.length - 1)]);
+      } else {
+        noFill(); // 其他时候不填充
+      }
+      
+      rect(x0, y0, x1 - x0, y1 - y0);
+    }
+  }
+
+  // 最后，绘制边框线
+  stroke(colors[4]); // 黑色线条
+  noFill();
+  rect(margin, margin, canvasWidth - 2*margin, canvasHeight - 2*margin);
+}
